@@ -21,6 +21,9 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
+// implemented but not used for now
+const mouseMotion = false
+
 type fdReader int
 
 func (fd fdReader) Read(p []byte) (n int, err error) {
@@ -52,7 +55,7 @@ func main() {
 	if len(os.Args) < 2 {
 		if parentSessionID != "" {
 			namePath := path.Join(threemuxDir, parentSessionID, "name")
-			thisName, _ := ioutil.ReadFile(namePath)
+			thisName, _ := os.ReadFile(namePath)
 			fmt.Printf("You're in session `%s`\n", string(thisName))
 			var choice string
 			for choice != "y" && choice != "n" {
@@ -196,7 +199,8 @@ func main() {
 			fmt.Println("Failed to find session with name:", sessionName)
 			os.Exit(1)
 		}
-		err = attach(sessionInfo)
+
+		err = attach(sessionInfo, mouseMotion)
 		if err != nil {
 			fmt.Println(err)
 			fmt.Println("See server-side logs at", path.Join(sessionInfo.path, "logs-server.txt"))
@@ -243,7 +247,7 @@ func main() {
 		fmt.Println("Sessions:")
 		for _, child := range children {
 			namePath := path.Join(threemuxDir, child.Name(), "name")
-			thisName, _ := ioutil.ReadFile(namePath)
+			thisName, _ := os.ReadFile(namePath)
 			fmt.Printf("- %s\n", string(thisName))
 		}
 	case "detach":
@@ -334,7 +338,7 @@ func findSession(sessionName string) (sessionInfo *SessionInfo, found bool, err 
 		uuid := child.Name()
 		dirPath := path.Join(threemuxDir, uuid)
 		namePath := path.Join(dirPath, "name")
-		nameRaw, err := ioutil.ReadFile(namePath)
+		nameRaw, err := os.ReadFile(namePath)
 		if err != nil {
 			return nil, false, err
 		}
@@ -368,7 +372,7 @@ func defaultPrompt() (sessionName string, isNew bool) {
 
 	for idx, child := range children {
 		dir := path.Join(threemuxDir, child.Name())
-		thisName, _ := ioutil.ReadFile(path.Join(dir, "name"))
+		thisName, _ := os.ReadFile(path.Join(dir, "name"))
 
 		options = append(options, strings.TrimSpace(string(thisName)))
 

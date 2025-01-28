@@ -192,3 +192,7 @@ type MouseUp struct {
 type MouseDrag struct {
 	X, Y int
 }
+
+type MouseMotion struct {
+	X, Y int
+}

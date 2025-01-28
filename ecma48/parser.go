@@ -340,8 +340,10 @@ func (p *Parser) dispatchCsi() {
 			p.out <- p.wrap(ScrollDown(1))
 		case 65:
 			p.out <- p.wrap(ScrollUp(1))
+		case 35:
+			p.out <- p.wrap(MouseMotion{X: seq[1] - 1, Y: seq[2] - 1})
 		default:
-			// p.out <- p.wrap(Unrecognized("Mouse"))
+			//	p.out <- p.wrap(Unrecognized("Mouse"))
 		}
 	case "?":
 		switch p.final {

@@ -15,7 +15,7 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-func attach(sessionInfo *SessionInfo) error {
+func attach(sessionInfo *SessionInfo, mouseMotion bool) error {
 	fmt.Printf("Waiting for server to be online... (%s)\n", sessionInfo.fdPath)
 
 	err := waitForFdSock(sessionInfo)
@@ -35,7 +35,10 @@ func attach(sessionInfo *SessionInfo) error {
 	defer fmt.Print("\x1b[?1006l")
 	fmt.Print("\x1b[?1002h")
 	defer fmt.Print("\x1b[?1002l")
-
+	if mouseMotion {
+		fmt.Print("\x1b[?1003h")       // motion tracking
+		defer fmt.Print("\x1b[?1003l") // motion tracking
+	}
 	fmt.Print("\x1b[?1l")
 
 	fdConn, err := net.Dial("unix", sessionInfo.fdPath)

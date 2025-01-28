@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net"
@@ -108,6 +109,9 @@ func serve(sessionInfo *SessionInfo) error {
 		case next := <-stdin:
 			human := humanify(next)
 			log.Println("Keypress:", human)
+
+			data, _ := json.Marshal(next)
+			u.SetStatusBarText(human + " " + string(data))
 
 			if human == "Ctrl+Q" {
 				return nil

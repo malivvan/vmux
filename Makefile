@@ -1,5 +1,13 @@
 .PHONY: build
 
+test-run: build run
+
+
+run:
+	@killall vmux || true
+	@rm -rf /tmp/vmux
+	@kitty sh -c "./build/vmux -mouse"
+
 build:
 	@mkdir -p build
 	@rm -f ./build/*

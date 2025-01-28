@@ -66,7 +66,7 @@ func loadOrGenerateConfig() (*CompiledConfig, error) {
 			return nil, fmt.Errorf("Found in home but not XDG? %s", err)
 		}
 	} else {
-		data, err := ioutil.ReadFile(xdgConfigPath)
+		data, err := os.ReadFile(xdgConfigPath)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to read config at `%s`: %s", xdgConfigPath, err)
 		}

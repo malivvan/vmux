@@ -115,16 +115,15 @@ func (u *Universe) refreshRenderRect() {
 	if u.helpBar {
 		u.drawHelpBar()
 	} else if u.enableStatusBar {
-		u.drawStatusBar()
+		u.drawStatusBar("vmux")
 	}
 
 	u.redrawAllLines()
 	u.drawSelectionBorder()
-	u.drawStatusBar()
+	u.drawStatusBar("vmux")
 }
 
-func (u *Universe) drawStatusBar() {
-	text := "vmux"
+func (u *Universe) drawStatusBar(text string) {
 	for i := 0; i < u.renderRect.W; i++ {
 		var r rune
 		if i < len(text) {
@@ -154,6 +153,11 @@ func (u *Universe) drawStatusBar() {
 	}
 }
 
+func (u *Universe) SetStatusBarText(text string) {
+	u.wmOpMutex.Lock()
+	defer u.wmOpMutex.Unlock()
+	u.drawStatusBar(text)
+}
 func (u *Universe) drawHelpBar() {
 	for _, hb := range helpBar {
 		if helpBarMinLen(hb[0]) > u.renderRect.W {
